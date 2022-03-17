@@ -26,6 +26,8 @@ public class ChunkLoadingFromFile : MonoBehaviour
     {
         // Serialize the object into JSON and save string.
         saveFile = JsonUtility.ToJson(chunkData);
+
+        ReadFile();
     }
 
     private void Update()
