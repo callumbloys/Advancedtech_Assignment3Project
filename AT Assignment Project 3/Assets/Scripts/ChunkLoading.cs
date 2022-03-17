@@ -33,7 +33,7 @@ public class ChunkLoading : MonoBehaviour
             if ((player.transform.position.magnitude - chunk.transform.position.magnitude + 150) > distanceThreshold)
             {
                 chunk.SetActive(true);
-                Debug.Log("rendering chunk");
+                //Debug.Log("rendering chunk");
             }               
             else
             {

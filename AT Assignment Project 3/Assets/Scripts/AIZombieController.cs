@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Timeline;
 
 public class AIZombieController : MonoBehaviour
 {
@@ -30,15 +31,40 @@ public class AIZombieController : MonoBehaviour
         }
         if (Vector3.Distance(this.transform.position, Player.transform.position) <= 10F)
         {
-            navmesh.destination = Player.transform.position;
-            speed = 3;
+            chase();
         }
         if (Vector3.Distance(this.transform.position, Player.transform.position) > 10F)
         {
-            navmesh.destination = RandomNavMeshLocation();
-            speed = 0.4F;
+            endChase();
         }
+
+        if (Vector3.Distance(this.transform.position, Player.transform.position) <= 1.5F)
+        {
+            Attack();
+        }
+
     }
+
+    public void chase()
+    {
+        navmesh.destination = Player.transform.position;
+        speed = 3;
+        navmesh.speed = speed;
+    }
+
+    public void Attack()
+    {
+        //Debug.Log("ATTACK");
+        PlayerController.PlayerHealth -= 50;
+    }
+
+    public void endChase()
+    {
+        navmesh.destination = RandomNavMeshLocation();
+        speed = 0.4F;
+        navmesh.speed = speed;
+    }
+
 
     public Vector3 RandomNavMeshLocation()
     {

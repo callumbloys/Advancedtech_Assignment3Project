@@ -17,17 +17,22 @@ public class ChunkLoadingFromFile : MonoBehaviour
 {
     private string saveFile;
 
+    [SerializeField] private Transform player;
+
     [SerializeField] private ChunkData chunkData;
 
-    private List<GameObject> chunksContainer = new List<GameObject>();
+    [SerializeField]private List<GameObject> chunksContainer = new List<GameObject>();
+    //private List<GameObject> chunksLoaded = new List<GameObject>();
 
-
+    [ContextMenu("titties")]
     void Start()
     {
         // Serialize the object into JSON and save string.
         saveFile = JsonUtility.ToJson(chunkData);
 
-        ReadFile();
+       // ReadFile();
+       ReadFile();
+
     }
 
     private void Update()
@@ -42,9 +47,17 @@ public class ChunkLoadingFromFile : MonoBehaviour
             WriteFile();
         }
 
-        // distance check
+        /*for (int i = 0; i < chunksContainer.Count; i++)
+        {
+            if (Vector3.Distance(player.position, chunksContainer[i].transform.position) > 400)
+            {
+                ReadFile();
+            }
+        }*/
+        
     }
 
+   
     public void ReadFile()
     {
         // Deserialize the JSON data .
