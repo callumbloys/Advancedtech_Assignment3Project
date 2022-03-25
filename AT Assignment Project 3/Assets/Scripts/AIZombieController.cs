@@ -11,6 +11,7 @@ public class AIZombieController : MonoBehaviour
     [Range(0, 500)] public float walkRadius;
     [SerializeField]
     public GameObject Player;
+    public float pushbackForce = 4;
 
     public void Start()
     {
@@ -43,6 +44,10 @@ public class AIZombieController : MonoBehaviour
             Attack();
         }
 
+        if (SafeZone.isSafe)
+        {
+           endChase();
+        }
     }
 
     public void chase()
@@ -55,7 +60,7 @@ public class AIZombieController : MonoBehaviour
     public void Attack()
     {
         //Debug.Log("ATTACK");
-        PlayerController.PlayerHealth -= 50;
+        PlayerController.PlayerHealth -= 50;      
     }
 
     public void endChase()

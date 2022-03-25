@@ -9,6 +9,7 @@ public class GunPickup : MonoBehaviour
     [SerializeField] private GameObject gunOnFloor;
 
     private bool pickedUp = false;
+    public static bool hasGun = false;
 
     private void Start()
     {
@@ -23,6 +24,7 @@ public class GunPickup : MonoBehaviour
             gun.SetActive(true);
             gunOnFloor.SetActive(false);
             Debug.Log("pickup Gun");
+            hasGun = true;
         }
     }
 

@@ -86,6 +86,15 @@ public class BasicBehaviour : MonoBehaviour
 		}
 		// Set the grounded test on the Animator Controller.
 		anim.SetBool(groundedBool, IsGrounded());
+
+		if (AimBehaviourBasic.isShooting)
+        {
+			anim.SetBool("Shooting", true);
+        }
+		if (AimBehaviourBasic.isShooting == false)
+		{
+			anim.SetBool("Shooting", false);
+		}
 	}
 
 	// Call the FixedUpdate functions of the active or overriding behaviours.

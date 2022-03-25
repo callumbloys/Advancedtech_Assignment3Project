@@ -4,14 +4,18 @@ using System.Collections;
 // AimBehaviour inherits from GenericBehaviour. This class corresponds to aim and strafe behaviour.
 public class AimBehaviourBasic : GenericBehaviour
 {
-	public string aimButton = "Aim", shoulderButton = "Aim Shoulder";     // Default aim and switch shoulders buttons.
+	public string aimButton = "Aim", shoulderButton = "Aim Shoulder", fireButton = "Fire1";     // Default aim and switch shoulders buttons.
 	public Texture2D crosshair;                                           // Crosshair texture.
 	public float aimTurnSmoothing = 0.15f;                                // Speed of turn response when aiming to match camera facing.
 	public Vector3 aimPivotOffset = new Vector3(0.5f, 1.2f,  0f);         // Offset to repoint the camera when aiming.
 	public Vector3 aimCamOffset   = new Vector3(0f, 0.4f, -0.7f);         // Offset to relocate the camera when aiming.
 
 	private int aimBool;                                                  // Animator variable related to aiming.
-	private bool aim;                                                     // Boolean to determine whether or not the player is aiming.
+	private bool aim;  
+	public static bool isShooting = false;
+	public static bool ObjectiveComplete = false;
+
+	// Boolean to determine whether or not the player is aiming.
 
 	// Start is always called after any Awake functions.
 	void Start ()
@@ -24,15 +28,25 @@ public class AimBehaviourBasic : GenericBehaviour
 	void Update ()
 	{
 		// Activate/deactivate aim by input.
-		if (Input.GetAxisRaw(aimButton) != 0 && !aim)
-		{
-			StartCoroutine(ToggleAimOn());
-		}
-		else if (aim && Input.GetAxisRaw(aimButton) == 0)
-		{
-			StartCoroutine(ToggleAimOff());
-		}
-
+		if (GunPickup.hasGun)
+        {
+			if (Input.GetAxisRaw(aimButton) != 0 && !aim)
+			{
+				StartCoroutine(ToggleAimOn());
+			}
+			else if (aim && Input.GetAxisRaw(aimButton) == 0)
+			{
+				StartCoroutine(ToggleAimOff());
+			}
+			if (Input.GetAxisRaw(fireButton) != 0 && aim && GunPickup.hasGun)
+			{
+				Debug.Log("shooting");
+				ObjectiveComplete = true;
+				isShooting = true;
+				StartCoroutine(ToggleShootOn());
+			}
+		}		
+		
 		// No sprinting while aiming.
 		canSprint = !aim;
 
@@ -46,6 +60,14 @@ public class AimBehaviourBasic : GenericBehaviour
 		// Set aim boolean on the Animator Controller.
 		behaviourManager.GetAnim.SetBool (aimBool, aim);
 	}
+	//private IEnumerator ToggleShootOff()
+
+	private IEnumerator ToggleShootOn()
+    {
+		yield return new WaitForSeconds(0.00f);
+		isShooting = false;
+	}
+
 
 	// Co-rountine to start aiming mode with delay.
 	private IEnumerator ToggleAimOn()

@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         
-        Debug.Log(PlayerHealth);
+        //Debug.Log(PlayerHealth);
         if (PlayerHealth <= 0)
         {
             Dead();
@@ -31,5 +31,6 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log("DEAD");
         Player.transform.position = respawnPoint.transform.position;
+        PlayerHealth = 100;
     }
 }

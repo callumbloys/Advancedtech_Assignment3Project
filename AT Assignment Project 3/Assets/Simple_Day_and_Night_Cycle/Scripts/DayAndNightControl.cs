@@ -23,7 +23,7 @@ public class DayAndNightControl : MonoBehaviour {
 	public Light directionalLight; //the directional light in the scene we're going to work with
 	public float SecondsInAFullDay = 120f; //in realtime, this is about two minutes by default. (every 1 minute/60 seconds is day in game)
 	[Range(0,1)]
-	public float currentTime = 0; //at default when you press play, it will be nightTime. (0 = night, 1 = day)
+	public float currentTime = 0.5F; //at default when you press play, it will be nightTime. (0 = night, 1 = day)
 	[HideInInspector]
 	public float timeMultiplier = 1f; //how fast the day goes by regardless of the secondsInAFullDay var. lower values will make the days go by longer, while higher values make it go faster. This may be useful if you're siumulating seasons where daylight and night times are altered.
 	public bool showUI;
@@ -44,7 +44,7 @@ public class DayAndNightControl : MonoBehaviour {
 		lightIntensity = directionalLight.intensity; //what's the current intensity of the light
 		starMat = StarDome.GetComponentInChildren<MeshRenderer> ().material;
 		if (StartDay) {
-			currentTime = 0.3f; //start at morning
+			currentTime = 0.5f; //start at morning
 			starMat.color = new Color(1f,1f,1f,0f);
 		}
 	}
