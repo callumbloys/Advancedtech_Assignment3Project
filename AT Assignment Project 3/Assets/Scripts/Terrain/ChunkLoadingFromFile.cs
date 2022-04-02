@@ -3,19 +3,125 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-[System.Serializable]
+/*[System.Serializable]
 public class ChunkData
 {
     public Material chunksMat;
-    public TerrainData[] terrainData;
+    public TerrainData terrainData;
     [HideInInspector] public float chunkPositionX;
     [HideInInspector] public float chunkPositionZ;
     [HideInInspector] public float chunkPositionY;
-}
+}*/
 
 public class ChunkLoadingFromFile : MonoBehaviour
 {
+    [SerializeField] private GameObject terrain;
+    [SerializeField] private Material material;
+
+    private class ChunkData
+    {
+        // Chunk
+        public TerrainData terrainData;
+        public Vector3 position;
+
+        // ChunkObject
+
+    }
+
+    private List<GameObject> chunksList = new List<GameObject>();
     private string saveFile;
+
+    private void Start()
+    {
+        GameObject terrainContainer = new GameObject("GeneratedTerrain");
+
+        float x = 0;
+        float z = 0;
+        const float chunkSize = 187.5F;
+        const int rowLength = 16;
+
+        for (int i = 0; i < terrain.transform.childCount; i++)
+        {
+            GameObject chunk = new GameObject("Chunk " + x + "," + z);
+            chunk.AddComponent<Chunk>().isLoaded = true;
+            chunk.AddComponent<Terrain>().terrainData = terrain.transform.GetChild(i).GetComponent<Terrain>().terrainData;
+            chunk.AddComponent<TerrainCollider>().terrainData = terrain.transform.GetChild(i).GetComponent<TerrainCollider>().terrainData;
+            chunk.GetComponent<Terrain>().materialTemplate = material;
+
+            var xPos = (x * chunkSize);
+            var zPos = (z * chunkSize);
+            chunk.transform.position = new Vector3(xPos, 0, zPos);
+
+            z++;
+            if (z >= rowLength)
+            {
+                z = 0;
+                x++;
+            }
+
+            chunk.transform.parent = terrainContainer.transform;
+            chunksList.Add(chunk);
+
+            // Writing chunk data to file
+            ChunkData dataToSave = new ChunkData();
+            dataToSave.terrainData = chunk.GetComponent<Terrain>().terrainData;
+            dataToSave.position = chunk.transform.position;
+
+            // Convert the new chunkdata to to json format
+            saveFile = JsonUtility.ToJson(dataToSave, true);
+
+            // Write new chunkdata to JSON file
+            File.WriteAllText(Application.dataPath + "/ChunkData/" + chunk.name + ".json", saveFile);
+        }
+    }
+
+
+    public void LoadChunk(GameObject chunk)
+    {
+        string chunkPath = Application.dataPath + "/ChunkData/" + chunk.name + ".json";
+        ChunkData loadedData = JsonUtility.FromJson<ChunkData>(File.ReadAllText(chunkPath));
+        chunk.AddComponent<Terrain>().terrainData = loadedData.terrainData;
+        chunk.AddComponent<TerrainCollider>().terrainData = loadedData.terrainData;
+        chunk.GetComponent<Terrain>().materialTemplate = material;
+        chunk.transform.position = loadedData.position;
+        chunk.GetComponent<Chunk>().isLoaded = true;
+
+        //chunksList.Add(chunk);
+    }
+
+    public void UnloadChunk(GameObject chunk)
+    {
+        // Writing chunk data to file
+        ChunkData dataToSave = new ChunkData();
+        dataToSave.terrainData = chunk.GetComponent<Terrain>().terrainData;
+        dataToSave.position = chunk.transform.position;
+
+        // Convert the new chunkdata to to json format
+        saveFile = JsonUtility.ToJson(dataToSave, true);
+
+        // Write new chunkdata to JSON file
+        File.WriteAllText(Application.dataPath + "/ChunkData/" + chunk.name + ".json", saveFile);
+
+        // Remove it from the active list 
+       // chunksList.Remove(chunk);
+
+        // Remove it's components
+        Destroy(chunk.GetComponent<Terrain>());
+        Destroy(chunk.GetComponent<TerrainCollider>());
+        //Destroy(chunk.GetComponent<Chunk>());
+
+        chunk.GetComponent<Chunk>().isLoaded = false;
+    }
+
+    public List<GameObject> GetChunks()
+    {
+        return chunksList;
+    }
+
+
+
+
+    /*private string saveFile;
 
     [SerializeField] private Transform player;
     [SerializeField] private ChunkData chunkData;
@@ -35,8 +141,6 @@ public class ChunkLoadingFromFile : MonoBehaviour
 
         for (int i = 0; i < chunkData.terrainData.Length; i++)
         {
-            ChunkData _loadedData = new ChunkData();
-
             // Create chunk
             GameObject _chunk = new GameObject("Chunk " + x + "," + z);
             _chunk.AddComponent<Chunk>().isLoaded = true;
@@ -46,6 +150,8 @@ public class ChunkLoadingFromFile : MonoBehaviour
             var xPos = 0.0f;
             var zPos = 0.0f;
 
+
+            ChunkData _loadedData = new ChunkData(); 
             string path = Application.dataPath + "/ChunkData/Chunk " + x + "," + z + ".json";
             if (File.Exists(path))
             {
@@ -80,6 +186,10 @@ public class ChunkLoadingFromFile : MonoBehaviour
 
             _chunk.transform.parent = transform;
             chunksContainer.Add(_chunk);
+
+
+            //_loadedData.terrainData[i] = 
+
 
             // Convert the new chunkdata to to json format
             saveFile = JsonUtility.ToJson(_loadedData, true);
@@ -125,9 +235,6 @@ public class ChunkLoadingFromFile : MonoBehaviour
         //dataToSave.terrainData[index] = chunk.GetComponent<Terrain>().terrainData;
 
 
-
-
-
         // Convert the new chunkdata to to json format
         saveFile = JsonUtility.ToJson(dataToSave, true);
 
@@ -145,5 +252,5 @@ public class ChunkLoadingFromFile : MonoBehaviour
     public List<GameObject>GetChunks()
     {
         return chunksContainer;
-    }
+    }*/
 }

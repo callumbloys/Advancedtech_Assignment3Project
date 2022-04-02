@@ -11,7 +11,7 @@ public class NPCDialogue : MonoBehaviour
     [SerializeField] private GameObject objectiveComplete;
 
     [Header("DialogueInfo")]
-    [SerializeField] private GameObject Dialogue;
+    [SerializeField] private GameObject dialogue;
     [SerializeField] private Texture avatar;
    /* public TextMeshProUGUI speakerNameText;
     public TextMeshProUGUI dialogueText;
@@ -21,7 +21,13 @@ public class NPCDialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Dialogue.SetActive(false);
+        dialogue.SetActive(false);
+
+        if (objective == null || objectiveComplete == null)
+        {
+            return;
+        }
+
         objective.SetActive(false);
         objectiveComplete.SetActive(false);
     }
@@ -32,14 +38,15 @@ public class NPCDialogue : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && canSpeak)
         {         
             Debug.Log("speaking to person");
-            Dialogue.SetActive(true);
+            dialogue.SetActive(true);
 
-            if (CompareTag("Boss"))
+            if (CompareTag("Boss") && objective != null)
             {
                 objective.SetActive(true);
             }
         }
-        if (AimBehaviourBasic.ObjectiveComplete)
+
+        if (AimBehaviourBasic.ObjectiveComplete && objective != null)
         {
             objective.SetActive(false);
             objectiveComplete.SetActive(true);
@@ -58,7 +65,7 @@ public class NPCDialogue : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canSpeak = false;
-            Dialogue.SetActive(false);
+            dialogue.SetActive(false);
         }
 
     }

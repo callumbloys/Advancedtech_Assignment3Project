@@ -1,9 +1,10 @@
 {
-    "chunksMat": {
-        "instanceID": 32026
+    "terrainData": {
+        "instanceID": 33670
     },
-    "terrainData": [],
-    "chunkPositionX": 1500.0,
-    "chunkPositionZ": 750.0,
-    "chunkPositionY": 0.0
+    "position": {
+        "x": 1500.0,
+        "y": 0.0,
+        "z": 750.0
+    }
 }

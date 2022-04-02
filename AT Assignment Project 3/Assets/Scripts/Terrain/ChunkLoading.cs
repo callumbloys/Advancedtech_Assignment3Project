@@ -4,7 +4,37 @@ using UnityEngine;
 
 public class ChunkLoading : MonoBehaviour
 {
-    private Transform player;
+    [SerializeField] private ChunkLoadingFromFile chunkLoadingFromFile;
+
+    private void Update()
+    {
+        foreach(GameObject chunk in chunkLoadingFromFile.GetChunks().ToArray())
+        {
+            // If chunk is loaded, unload it
+            if (Vector3.Distance(transform.position, chunk.transform.position) > 600)
+            {
+                // if chunk is loaded, unload it
+                if (chunk.GetComponent<Chunk>().isLoaded)
+                {
+                    chunkLoadingFromFile.UnloadChunk(chunk);
+                }
+            }
+
+            // If chunk is unloaded, load it
+            else if (Vector3.Distance(transform.position, chunk.transform.position) <= 600)
+            {
+                // if chunk is loaded, unload it
+                if (!chunk.GetComponent<Chunk>().isLoaded)
+                {
+                    chunkLoadingFromFile.LoadChunk(chunk);
+                }
+            }
+        }
+    }
+
+
+
+    /*private Transform player;
     [SerializeField] private ChunkLoadingFromFile chunkLoadingFromFile;
 
     private void Awake()
@@ -21,7 +51,7 @@ public class ChunkLoading : MonoBehaviour
                 // if chunk is loaded, unload it
                 if(chunkLoadingFromFile.GetChunks()[i].GetComponent<Chunk>().isLoaded)
                 {
-                    chunkLoadingFromFile.UnloadChunk(chunkLoadingFromFile.GetChunks()[i], i);
+                    chunkLoadingFromFile.UnloadChunk(chunkLoadingFromFile.GetChunks()[i]);
                 }
             }
 
@@ -30,10 +60,10 @@ public class ChunkLoading : MonoBehaviour
                 // if chunk is unloaded, load it
                 if (!chunkLoadingFromFile.GetChunks()[i].GetComponent<Chunk>().isLoaded)
                 {
-                    chunkLoadingFromFile.LoadChunk(chunkLoadingFromFile.GetChunks()[i], i);
+                    chunkLoadingFromFile.LoadChunk(chunkLoadingFromFile.GetChunks()[i]);
                 }
             }
         }
-    }
+    }*/
 }
 
