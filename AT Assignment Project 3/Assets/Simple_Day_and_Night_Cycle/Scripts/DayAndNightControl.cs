@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class DayColors
@@ -16,6 +17,8 @@ public class DayAndNightControl : MonoBehaviour {
 	public GameObject StarDome;
 	public GameObject moonState;
 	public GameObject moon;
+	[SerializeField] private Text CurrentDayUI;
+	[SerializeField] private Text CurrentTimeUI;
 	public DayColors dawnColors;
 	public DayColors dayColors;
 	public DayColors nightColors;
@@ -47,8 +50,10 @@ public class DayAndNightControl : MonoBehaviour {
 			currentTime = 0.5f; //start at morning
 			starMat.color = new Color(1f,1f,1f,0f);
 		}
+		CurrentTimeUI.text = "Time: " + currentTime;
+		CurrentDayUI.text = "DAY: " + currentDay;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		UpdateLight();
@@ -112,6 +117,9 @@ public class DayAndNightControl : MonoBehaviour {
 		}
 
 		directionalLight.intensity = lightIntensity * intensityMultiplier;
+
+		CurrentTimeUI.text = "Time: " + currentTime;
+		CurrentDayUI.text = "DAY: " + currentDay;
 	}
 
 	public string TimeOfDay ()
